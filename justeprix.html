@@ -11,7 +11,7 @@
     <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1>
 
     <script>
-        var randomToFind = Math.floor(Math.random() * 1000);
+        var randomToFind = Math.floor(Math.random() * 100);
         var nbPlayers = Math.floor(Math.random() * 3) + 1;
         var playersOrder = [];
         for (let i = 1; i <= nbPlayers; i++) { playersOrder.push(i); }
@@ -21,6 +21,18 @@
         function myFunction() {
             playersOrder.push(playersOrder.shift());
             document.getElementById("spanToPlay").innerHTML = playersOrder[0];
+            var saisie =document.getElementById("name").value;
+            if(saisie == "") {//Annuller
+                alert("Entre une valeur");
+            } else {
+                console.log(saisie, randomToFind)
+                if(saisie < randomToFind)
+                    alert("Plus");
+                else if (saisie > randomToFind)
+                    alert("Moins");
+                else
+                    alert("Win!");
+            }
         }
 
     </script>
