@@ -4,42 +4,162 @@
   <meta charset="utf-8">
   <title>Titre de la page</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+
+.sidebar {
+  position: fixed;
+  width: 25%;
+  height: 100vh;
+  background: #312450;
+  font-size: 0.65em;
+}
+
+.nav {
+  position: relative;
+  margin: 0 15%;
+  text-align: right;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+}
+
+.nav ul {
+  list-style: none;
+}
+.nav ul li {
+  position: relative;
+  margin: 3.2em 0;
+}
+.nav ul li a {
+  line-height: 5em;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.35);
+  display: block;
+  transition: all ease-out 300ms;
+}
+.nav ul li.active a {
+  color: white;
+}
+.nav ul li:not(.active)::after {
+  opacity: 0.2;
+}
+.nav ul li:not(.active):hover a {
+  color: rgba(255, 255, 255, 0.75);
+}
+.nav ul li::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0.2em;
+  background: black;
+  left: 0;
+  bottom: 0;
+  background-image: linear-gradient(to right, #5e42a6, #b74e91);
+}
+
+.mainwindow {
+  position: relative;
+  width: 75%;
+  float: right;
+  height: 100vh;
+}
+.mainwindow .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.mainwindow a {
+  position: relative;
+}
+.mainwindow a img {
+  width: 48px;
+  height: 48px;
+}
+.mainwindow p {
+  text-transform: uppercase;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  color: #FFF;
+  font-weight: bold;
+  margin-top: 20px;
+}
+    </style>
+
 </head>
 <body>
 
-    <center>
-        <div style="margin-top: 5%;">
-            <input type="number" style="width: 10%;" placeholder="NB Players" class="form-control" id="nbplayer" name="min">
-            <input type="number" style="width: 10%;" placeholder="Min" class="form-control" id="min" name="min">
-            <input type="number" style="width: 10%;" placeholder="Max" class="form-control" id="max" name="max">
+<aside class="sidebar">
+    <nav class="nav">
+    <ul>
+        <li class="active"><a href="javascript:solo();">Solo</a></li>
+        <li><a href="javascript:multi();">Multi</a></li>
+    </ul>
+    </nav>
+</aside>
+
+<section class="mainwindow" id ="choice">
+    <div class="container" id="choice">
+        <div class="input-group mb-3">
+            <input type="number" style="width: 10%;" placeholder="NB Players" class="form-control" id="nbplayer">
+            <input type="number" style="width: 10%;" placeholder="Min" class="form-control" id="min"">
+            <input type="number" style="width: 10%;" placeholder="Max" class="form-control" id="max">
+            <input type="text" style="width: 10%;" placeholder="Chrono" class="form-control" id="chrono">
             <button type="button" onclick="startGame()" class="btn btn-secondary btn-sm">Start</button></br>
         </div>
-    </center>
+    </div>
+</section>
 
-    <center><div id="game" style="margin-top: 5%;display: none;">
-
-        <p id="countdown"></p></br>
-
-        <input type="number" style="width: 10%;" class="form-control" id="name" name="name">
-        </br>
-
+<section class="mainwindow" id ="game">
+    <div class="container" id="choice">
+        <p id="countdown" style="color: grey;"></p></br>
+        <input type="number" style="width: 10%;" class="form-control" id="name" name="name"></br>
         <button type="button"  onclick="myFunction()" id="buttonplay" class="btn btn-secondary btn-sm">Valider</button></br>
-
-        <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1>
-    </div></center>
+        <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1></br>
+    </div>
+</section>
 
     <script>
-
         var playersOrder = [];
         var randomToFind;
+        var mode = '';
+
+        window.onload = function() {
+          solo();
+        };
+
+        function solo() {
+            document.getElementById('choice').style.display = 'block';
+            document.getElementById('chrono').style.display = 'block';
+            document.getElementById('nbplayer').style.display = 'none';
+            document.getElementById('game').style.display = 'none';
+        }
+        function multi() {
+            document.getElementById('choice').style.display = 'block';
+            document.getElementById('nbplayer').style.display = 'block';
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('chrono').style.display = 'none';
+        }
 
         function startGame() {
+            document.getElementById('choice').style.display = 'none';
             var min = document.getElementById('min').value;
             var max = document.getElementById('max').value;
             var nbPlayers = document.getElementById('nbplayer').value;
+            if (nbPlayers == '')
+              nbPlayers = 1;
+            if (nbPlayers > 1)
+              mode = 'multi';
+            else
+              mode = 'solo';
             randomToFind = Math.floor(Math.random() * (max - min + 1) + min);
             document.getElementById('game').style.display = "block";
             for (let i = 1; i <= nbPlayers; i++) { playersOrder.push(i); }
+            if (mode == 'multi')
+              document.getElementById('countdown').style.display = 'none';
             console.log('To find :', randomToFind, 'NB Players :', nbPlayers);
             document.getElementById("spanToPlay").innerHTML = playersOrder[0];
             var countDownDate = new Date().getTime() + 3*60000;
@@ -56,7 +176,7 @@
                     document.getElementById("countdown").innerHTML = "EXPIRED";
                     win();
                 }
-            }, 1000);    
+            }, 1000);
         }
 
         function myFunction() {
@@ -79,7 +199,6 @@
             document.getElementById("name").disabled = true;
             document.getElementById("buttonplay").disabled = true;
         }
-
     </script>
 
 </body>
