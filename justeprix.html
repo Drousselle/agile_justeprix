@@ -3,12 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>Titre de la page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-    <input type="text" id="name" name="name" required minlength="4" maxlength="8" size="10">
-    <button onclick="myFunction()">Valider</button>
+    <center><div style="margin-top: 5%;">
+        <input type="number" style="width: 10%;" class="form-control" id="name" name="name" required minlength="4" maxlength="8" size="10">
+        </br>
 
-    <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1>
+        <button type="button"  onclick="myFunction()" class="btn btn-secondary btn-sm">Valider</button></br>
+
+        <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1>
+    </div></center>
 
     <script>
         var randomToFind = Math.floor(Math.random() * 100);
