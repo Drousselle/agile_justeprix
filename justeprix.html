@@ -6,31 +6,66 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-    <center><div style="margin-top: 5%;">
-        <input type="number" style="width: 10%;" class="form-control" id="name" name="name" required minlength="4" maxlength="8" size="10">
+
+    <center>
+        <div style="margin-top: 5%;">
+            <input type="number" style="width: 10%;" placeholder="NB Players" class="form-control" id="nbplayer" name="min">
+            <input type="number" style="width: 10%;" placeholder="Min" class="form-control" id="min" name="min">
+            <input type="number" style="width: 10%;" placeholder="Max" class="form-control" id="max" name="max">
+            <button type="button" onclick="startGame()" class="btn btn-secondary btn-sm">Start</button></br>
+        </div>
+    </center>
+
+    <center><div id="game" style="margin-top: 5%;display: none;">
+
+        <p id="countdown"></p></br>
+
+        <input type="number" style="width: 10%;" class="form-control" id="name" name="name">
         </br>
 
-        <button type="button"  onclick="myFunction()" class="btn btn-secondary btn-sm">Valider</button></br>
+        <button type="button"  onclick="myFunction()" id="buttonplay" class="btn btn-secondary btn-sm">Valider</button></br>
 
         <h1 id="toPlay">Joueur <span id="spanToPlay"></span></h1>
     </div></center>
 
     <script>
-        var randomToFind = Math.floor(Math.random() * 100);
-        var nbPlayers = Math.floor(Math.random() * 3) + 1;
+
         var playersOrder = [];
-        for (let i = 1; i <= nbPlayers; i++) { playersOrder.push(i); }
-        console.log('To find :', randomToFind, 'NB Players :', nbPlayers);
-        document.getElementById("spanToPlay").innerHTML = playersOrder[0];
+        var randomToFind;
+
+        function startGame() {
+            var min = document.getElementById('min').value;
+            var max = document.getElementById('max').value;
+            var nbPlayers = document.getElementById('nbplayer').value;
+            randomToFind = Math.floor(Math.random() * (max - min + 1) + min);
+            document.getElementById('game').style.display = "block";
+            for (let i = 1; i <= nbPlayers; i++) { playersOrder.push(i); }
+            console.log('To find :', randomToFind, 'NB Players :', nbPlayers);
+            document.getElementById("spanToPlay").innerHTML = playersOrder[0];
+            var countDownDate = new Date().getTime() + 3*60000;
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("countdown").innerHTML = "EXPIRED";
+                    win();
+                }
+            }, 1000);    
+        }
 
         function myFunction() {
             playersOrder.push(playersOrder.shift());
             document.getElementById("spanToPlay").innerHTML = playersOrder[0];
             var saisie =document.getElementById("name").value;
-            if(saisie == "") {//Annuller
+            if(saisie == "") {
                 alert("Entre une valeur");
             } else {
-                console.log(saisie, randomToFind)
                 if(saisie < randomToFind)
                     alert("Plus");
                 else if (saisie > randomToFind)
@@ -38,6 +73,11 @@
                 else
                     alert("Win!");
             }
+        }
+
+        function win() {
+            document.getElementById("name").disabled = true;
+            document.getElementById("buttonplay").disabled = true;
         }
 
     </script>
